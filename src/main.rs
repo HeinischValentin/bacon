@@ -10,50 +10,30 @@ struct CliInput
     number_input: String
 }
 
-fn parse_hex(input: String) -> Result<i64, ParseIntError>
+fn format_output(num: i64, base: String) -> String
 {
-    let input_no_prefix = input.trim_start_matches("0x");
-    match i64::from_str_radix(input_no_prefix, 16)
+    match base.as_str()
+    {
+        "b" => return format!("{num:#b}"),
+        "d" => return format!("{}", num),
+        "x" => return format!("{num:#x}"),
+        _   => return "Error! The given base is not implemented (yet)!".to_string()
+    };
+}
+
+fn parse_number(input: String, base: u32) -> Result<i64, ParseIntError>
+{
+    let input_no_prefix = input.trim_start_matches("0b").trim_start_matches("0x");
+    match i64::from_str_radix(input_no_prefix, base)
     {
         Ok(parsed_int) => return Ok(parsed_int),
         Err(e) => return Err(e)
     };
 }
 
-
-fn parse_dec(input: String) -> Result<i64, ParseIntError>
+fn parse_base(input: String) -> Result<u32, ParseIntError>
 {
-    match input.parse::<i64>()
-    {
-        Ok(parsed_int) => return Ok(parsed_int),
-        Err(e) => return Err(e)
-    };
-}
-
-fn parse_bin(input: String) -> Result<i64, ParseIntError>
-{
-    let input_no_prefix = input.trim_start_matches("0b");
-    match i64::from_str_radix(input_no_prefix, 2)
-    {
-        Ok(parsed_int) => return Ok(parsed_int),
-        Err(e) => return Err(e)
-    };
-}
-
-fn parse_number(input: String, base: i8) -> Result<i64, ParseIntError>
-{
-    match base
-    {
-        2 => return parse_bin(input),
-        10 => return parse_dec(input),
-        16 => return parse_hex(input),
-        _ => return parse_bin(String::from("error"))          // TODO: Create Error Type
-    };
-}
-
-fn parse_base(input: String) -> Result<i8, ParseIntError>
-{
-    match input.parse::<i8>()
+    match input.parse::<u32>()
     {
         Ok(parsed_base) => return Ok(parsed_base),
         Err(e) => return Err(e)
@@ -83,6 +63,8 @@ fn main()
             return;
         }
     };
-    println!("{}", parsed_int);
+    
+    let output = format_output(parsed_int, args.output_base);
+    println!("{}", output);
 }
 
