@@ -1,7 +1,7 @@
 use std::char::from_digit;
 use std::i64;
 use std::num::ParseIntError;
-use std::fmt::{self, format};
+use std::fmt;
 use clap::Parser;
 
 #[derive(Debug, Clone)]
