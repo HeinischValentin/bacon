@@ -16,11 +16,16 @@ impl fmt::Display for BaseError
 }
 
 #[derive(Parser)]
+#[clap(version, about, long_about = None)]
+/// A simple BaseConversion tool
 struct CliInput
 {
-    input_base: u32,
+    /// The input number
+    number_input: String,
+    /// The output base
     output_base: u32,
-    number_input: String
+    /// The input base. If omitted, the base is tried to be deducted. Looks if the input is starting with 0b or 0x and otherwise tries to use decimal base
+    input_base: Option<u32>
 }
 
 fn format_output(num: u64, base: u32) -> Result<String, BaseError>
@@ -60,7 +65,7 @@ fn format_output(num: u64, base: u32) -> Result<String, BaseError>
     Ok(result_string)
 }
 
-fn parse_number(input: String, base: u32) -> Result<i64, ParseIntError>
+fn parse_number(input: &String, base: u32) -> Result<i64, ParseIntError>
 {
     let input_no_prefix = input.trim_start_matches("0b").trim_start_matches("0x");
     match i64::from_str_radix(input_no_prefix, base as u32)
@@ -70,11 +75,32 @@ fn parse_number(input: String, base: u32) -> Result<i64, ParseIntError>
     };
 }
 
+fn deduct_base(input: &String) -> u32
+{
+    if input.starts_with("0b") {
+        return 2;
+    }
+    else if input.starts_with("00") {
+        return 8;
+    }
+    else if input.starts_with("0x") {
+        return 16;
+    }
+    else {
+        return 10;
+    }
+}
+
 fn main()
 {
     let args = CliInput::parse();
 
-    let parsed_int = match parse_number(args.number_input, args.input_base)
+    let base_in = match args.input_base {
+        Some(b) => b,
+        None    => deduct_base(&args.number_input)
+    };
+
+    let parsed_int = match parse_number(&args.number_input, base_in)
     {
         Ok(parsed_int) => parsed_int,
         Err(_e) =>
