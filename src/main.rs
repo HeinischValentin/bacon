@@ -17,7 +17,7 @@ impl fmt::Display for BaseError
 
 #[derive(Parser)]
 #[clap(version, about, long_about = None)]
-/// A simple BaseConversion tool
+/// A simple base conversion tool
 struct CliInput
 {
     /// The input number
