@@ -11,8 +11,7 @@ struct CliInput {
     input_number: String,
     /// The output base
     output_base: u32,
-    /// The input base. If omitted, the base is tried to be deducted
-    /// Looks if the input is starting with 0b or 0x and otherwise tries to use decimal base
+    /// The input base. If omitted, the base is tried to be deducted. Looks if the input is starting with 0b or 0x and otherwise tries to use decimal base
     input_base: Option<u32>,
 }
 
