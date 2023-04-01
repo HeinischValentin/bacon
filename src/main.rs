@@ -9,10 +9,11 @@ use clap::Parser;
 struct CliInput
 {
     /// The input number
-    number_input: String,
+    input_number: String,
     /// The output base
     output_base: u32,
-    /// The input base. If omitted, the base is tried to be deducted. Looks if the input is starting with 0b or 0x and otherwise tries to use decimal base
+    /// The input base. If omitted, the base is tried to be deducted
+    /// Looks if the input is starting with 0b or 0x and otherwise tries to use decimal base
     input_base: Option<u32>
 }
 
@@ -22,10 +23,10 @@ fn main()
 
     let base_in = match args.input_base {
         Some(b) => b,
-        None    => deduct_base(&args.number_input)
+        None    => deduct_base(&args.input_number)
     };
 
-    let parsed_int = match parse_number(&args.number_input, base_in)
+    let parsed_int = match parse_number(&args.input_number, base_in)
     {
         Ok(parsed_int) => parsed_int,
         Err(_e) =>
