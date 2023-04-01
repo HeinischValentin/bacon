@@ -47,8 +47,6 @@ bacon 0xff 10 16
 
 ## Authors
 
-Contributors names and contact info
-
 Valentin Heinisch
 
 ## Version History
